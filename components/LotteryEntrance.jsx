@@ -15,7 +15,11 @@ const LotteryEntrance = () => {
 
   const dispatch = useNotification();
 
-  const { runContractFunction: enterRaffle, isLoading, isFetching } = useWeb3Contract({
+  const {
+    runContractFunction: enterRaffle,
+    isLoading,
+    isFetching,
+  } = useWeb3Contract({
     abi: abi,
     contractAddress: raffleAddress,
     functionName: "enterRaffle",
@@ -53,7 +57,6 @@ const LotteryEntrance = () => {
     setRecentWinner(recentWinnerFromCall);
   }
 
-
   useEffect(() => {
     if (isWeb3Enabled) {
       updateUI();
@@ -77,32 +80,62 @@ const LotteryEntrance = () => {
   };
 
   return (
-    <div className="p-5">
-      <div>
-        Welcome to Raffle Royale!
+    <div className="p-5 flex flex-col items-center text-lg">
+      <div className="text-3xl font-bold">
+        Welcome to Raffle Royale, where everyone is a Winner!!
       </div>
+      <br />
+      <img src="raffle.jpg" style={{ height: 300 }} />
       {raffleAddress ? (
-        <div>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
-            onClick={async () => {
-              await enterRaffle({
-                onSuccess: handleSuccess,
-                onError: (error) => {
-                  console.log(error);
-                },
-              });
-            }}
-            disabled={isLoading || isFetching}
-          >
-            {isLoading || isFetching ? <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div> : <div>Enter Raffle</div>}
-          </button>
+        <div className="flex justify-evenly flex-col items-center h-60">
           <div>
-            Entrance Fee: {ethers.utils.formatUnits(entranceFee, "ether")} ETH
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+              onClick={async () => {
+                await enterRaffle({
+                  onSuccess: handleSuccess,
+                  onError: (error) => {
+                    console.log(error);
+                  },
+                });
+              }}
+              disabled={isLoading || isFetching}
+            >
+              {isLoading || isFetching ? (
+                <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
+              ) : (
+                <div>Enter Raffle</div>
+              )}
+            </button>
           </div>
-          <div>The current number of players is: {numberOfPlayers}</div>
-          <div>Amount of Raffle Money you can win right now: {ethers.utils.formatUnits(entranceFee, "ether") * numberOfPlayers} ETH</div>
-          <div>The most previous winner was: {recentWinner}</div>
+          <div className="flex justify-evenly flex-col items-center">
+            <div>
+              Entrance Fee is only{" "}
+              <span className="text-blue-700 hover:text-blue-500">
+                {ethers.utils.formatUnits(entranceFee, "ether")} ETH
+              </span>
+            </div>
+            <div>
+              The current number of players are:{" "}
+              <span className="text-blue-700 hover:text-blue-500">
+                {numberOfPlayers}
+              </span>
+            </div>
+            <div>
+              Amount of Raffle Money you can win right now:{" "}
+              <span className="text-blue-700 hover:text-blue-500">
+                {ethers.utils.formatUnits(entranceFee, "ether") *
+                  numberOfPlayers}{" "}
+                ETH !!
+              </span>
+            </div>
+            <div>
+              The most previous winner was:{" "}
+              <span className="text-blue-700 hover:text-blue-500">
+                {recentWinner}
+              </span>
+            </div>
+          </div>
         </div>
       ) : (
         <div> No Raffle Address detected</div>
